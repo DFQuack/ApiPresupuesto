@@ -1,15 +1,17 @@
 package sv.edu.udb.controller.request;
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
-import sv.edu.udb.repository.domain.Presupuesto;
 import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
+import java.time.Month;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -20,34 +22,27 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(NON_NULL)
-public class IngresoRequest {
+public class GastoRequest {
     @NotBlank
-    private String nombre;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM")
+    private Month mes;
 
     @Positive
     @Digits(integer = 6, fraction = 2)
-    private BigDecimal sueldo;
-
-    private Boolean ingresoFormal;
+    private BigDecimal gastosBasicos;
 
     @PositiveOrZero
     @Digits(integer = 6, fraction = 2)
-    private BigDecimal retencionAFP;
+    private BigDecimal deudas;
 
     @PositiveOrZero
     @Digits(integer = 6, fraction = 2)
-    private BigDecimal retencionISSS;
+    private BigDecimal otrosGastos;
 
     @PositiveOrZero
     @Digits(integer = 6, fraction = 2)
-    private BigDecimal retencionRenta;
-
-    @Positive
-    @Digits(integer = 6, fraction = 2)
-    private BigDecimal sueldoNeto;
+    private BigDecimal ahorro;
 
     @NonNull
     private Usuario usuario;
-
-    private Presupuesto presupuesto;
 }

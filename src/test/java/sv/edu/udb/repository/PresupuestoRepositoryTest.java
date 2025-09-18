@@ -27,7 +27,7 @@ public class PresupuestoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("usuariopresupuesto");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Presupuesto presupuesto = new Presupuesto();
@@ -51,7 +51,7 @@ public class PresupuestoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser3");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Presupuesto presupuesto = new Presupuesto();
@@ -76,7 +76,7 @@ public class PresupuestoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser4");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Presupuesto presupuesto = new Presupuesto();
@@ -88,11 +88,11 @@ public class PresupuestoRepositoryTest {
         presupuestoRepository.save(presupuesto);
 
         // When
-        Optional<Presupuesto> foundPresupuesto = presupuestoRepository.findByUsuario_Id(savedUsuario.getId());
+        Presupuesto foundPresupuesto = presupuestoRepository.findByUsuario_Id(savedUsuario.getId());
 
         // Then
-        assertTrue(foundPresupuesto.isPresent());
-        assertEquals(new BigDecimal("500.00"), foundPresupuesto.get().getGastosBasicos());
+        assertNotNull(foundPresupuesto);
+        assertEquals(new BigDecimal("500.00"), foundPresupuesto.getGastosBasicos());
     }
 
     @Test
@@ -100,16 +100,16 @@ public class PresupuestoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser5");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         // When - Buscar presupuesto para usuario que no tiene
         Optional<Presupuesto> foundPresupuesto = presupuestoRepository.findByUsuario(savedUsuario);
-        Optional<Presupuesto> foundPresupuestoById = presupuestoRepository.findByUsuario_Id(savedUsuario.getId());
+        Presupuesto foundPresupuestoById = presupuestoRepository.findByUsuario_Id(savedUsuario.getId());
 
         // Then
         assertFalse(foundPresupuesto.isPresent());
-        assertFalse(foundPresupuestoById.isPresent());
+        assertNull(foundPresupuestoById);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class PresupuestoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser6");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         // Crear primer presupuesto

@@ -29,7 +29,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("usuariogastos");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Gasto gasto = new Gasto();
@@ -55,7 +55,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser4");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Gasto gasto1 = new Gasto();
@@ -84,7 +84,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser5");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Gasto gasto = new Gasto();
@@ -106,7 +106,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser6");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Gasto gasto = new Gasto();
@@ -129,7 +129,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser7");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Gasto gasto = new Gasto();
@@ -152,7 +152,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser8");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Gasto gasto = new Gasto();
@@ -175,7 +175,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser9");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         // When - Buscar gasto que no existe
@@ -190,7 +190,7 @@ public class GastoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser10");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         // When - Buscar gastos de usuario sin gastos

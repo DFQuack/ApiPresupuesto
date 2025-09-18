@@ -1,24 +1,20 @@
 package sv.edu.udb.controller.response;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldNameConstants;
-import sv.edu.udb.repository.domain.Presupuesto;
 import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
+import java.time.Month;
 
 @Getter
 @Setter
 @Builder(toBuilder = true)
 @FieldNameConstants
-public class IngresoResponse {
-    private String nombre;
-    private BigDecimal sueldo;
-    private Boolean ingresoFormal;
-    private BigDecimal retencionAFP, retencionISSS, retencionRenta, sueldoNeto;
+public class GastoResponse {
+    private Month mes;
+    private BigDecimal gastosBasicos, deudas, otrosGastos, ahorro;
     private Usuario usuario;
-    private Presupuesto presupuesto;
 }

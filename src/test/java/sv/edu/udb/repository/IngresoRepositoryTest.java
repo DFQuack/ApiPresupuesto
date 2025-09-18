@@ -27,7 +27,7 @@ public class IngresoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Ingreso ingreso = new Ingreso();
@@ -55,7 +55,7 @@ public class IngresoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("testuser2");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Ingreso ingreso = new Ingreso();
@@ -80,7 +80,7 @@ public class IngresoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("usuarioconingresos");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         Ingreso ingreso1 = new Ingreso();
@@ -109,7 +109,7 @@ public class IngresoRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("usuariosiningresos");
-        usuario.setContraseña("password");
+        usuario.setPassword("password");
         Usuario savedUsuario = usuarioRepository.save(usuario);
 
         // When

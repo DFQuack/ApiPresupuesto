@@ -21,7 +21,7 @@ public class Usuario {
     private String username;
 
     @Column(nullable = false)
-    private String contraseña;
+    private String password;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ingreso> ingresos;

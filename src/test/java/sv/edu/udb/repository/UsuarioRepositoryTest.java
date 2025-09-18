@@ -22,7 +22,7 @@ public class UsuarioRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("juanperez");
-        usuario.setContraseña("password123");
+        usuario.setPassword("password123");
 
         // When
         Usuario savedUsuario = usuarioRepository.save(usuario);
@@ -38,7 +38,7 @@ public class UsuarioRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("mariagarcia");
-        usuario.setContraseña("pass456");
+        usuario.setPassword("pass456");
         entityManager.persist(usuario);
 
         // When
@@ -54,7 +54,7 @@ public class UsuarioRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("carlopez");
-        usuario.setContraseña("pass789");
+        usuario.setPassword("pass789");
         entityManager.persist(usuario);
 
         // When
@@ -69,7 +69,7 @@ public class UsuarioRepositoryTest {
         // Given
         Usuario usuario = new Usuario();
         usuario.setUsername("usuarioborrar");
-        usuario.setContraseña("pass123");
+        usuario.setPassword("pass123");
         Usuario savedUsuario = entityManager.persist(usuario);
 
         // When
