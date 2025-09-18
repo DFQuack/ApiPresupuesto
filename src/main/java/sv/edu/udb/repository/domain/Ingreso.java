@@ -1,17 +1,23 @@
-package sv.edu.udb.Entities;
+package sv.edu.udb.repository.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "ingreso")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ingreso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idIngreso;
-
-    @Column(name = "idUsuario", nullable = false)
-    private Long idUsuario;
+    private Long id;
 
     @Column(nullable = false)
     private String nombre;
@@ -34,16 +40,13 @@ public class Ingreso {
     @Column(precision = 10, scale = 2)
     private BigDecimal sueldoNeto;
 
-    // Constructores
-    public Ingreso() {}
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idUsuario")
+    private Usuario usuario;
 
-    public Ingreso(Long idUsuario, String nombre, BigDecimal sueldo, Boolean ingresoFormal) {
-        this.idUsuario = idUsuario;
-        this.nombre = nombre;
-        this.sueldo = sueldo;
-        this.ingresoFormal = ingresoFormal;
-        this.calcularRetenciones();
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idPresupuesto")
+    private Presupuesto presupuesto;
 
     public void calcularRetenciones() {
         if (Boolean.TRUE.equals(ingresoFormal)) {
@@ -85,31 +88,4 @@ public class Ingreso {
         }
     }
 
-    // Getters y Setters
-    public Long getIdIngreso() { return idIngreso; }
-    public void setIdIngreso(Long idIngreso) { this.idIngreso = idIngreso; }
-
-    public Long getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
-
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-
-    public BigDecimal getSueldo() { return sueldo; }
-    public void setSueldo(BigDecimal sueldo) { this.sueldo = sueldo; }
-
-    public Boolean getIngresoFormal() { return ingresoFormal; }
-    public void setIngresoFormal(Boolean ingresoFormal) { this.ingresoFormal = ingresoFormal; }
-
-    public BigDecimal getRetencionAFP() { return retencionAFP; }
-    public void setRetencionAFP(BigDecimal retencionAFP) { this.retencionAFP = retencionAFP; }
-
-    public BigDecimal getRetencionISSS() { return retencionISSS; }
-    public void setRetencionISSS(BigDecimal retencionISSS) { this.retencionISSS = retencionISSS; }
-
-    public BigDecimal getRetencionRenta() { return retencionRenta; }
-    public void setRetencionRenta(BigDecimal retencionRenta) { this.retencionRenta = retencionRenta; }
-
-    public BigDecimal getSueldoNeto() { return sueldoNeto; }
-    public void setSueldoNeto(BigDecimal sueldoNeto) { this.sueldoNeto = sueldoNeto; }
 }
