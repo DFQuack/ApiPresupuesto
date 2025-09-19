@@ -38,4 +38,7 @@ public class Gasto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idUsuario")
     private Usuario usuario;
+
+    public void setId(long l) {
+    }
 }

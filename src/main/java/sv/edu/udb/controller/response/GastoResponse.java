@@ -14,6 +14,7 @@ import java.time.Month;
 @Builder(toBuilder = true)
 @FieldNameConstants
 public class GastoResponse {
+    private Long id;
     private Month mes;
     private BigDecimal gastosBasicos, deudas, otrosGastos, ahorro;
     private Usuario usuario;
