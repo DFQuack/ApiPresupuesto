@@ -3,7 +3,6 @@ package sv.edu.udb.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import sv.edu.udb.repository.domain.Presupuesto;
@@ -29,22 +28,6 @@ public class IngresoRequest {
     private BigDecimal sueldo;
 
     private Boolean ingresoFormal;
-
-    @PositiveOrZero
-    @Digits(integer = 6, fraction = 2)
-    private BigDecimal retencionAFP;
-
-    @PositiveOrZero
-    @Digits(integer = 6, fraction = 2)
-    private BigDecimal retencionISSS;
-
-    @PositiveOrZero
-    @Digits(integer = 6, fraction = 2)
-    private BigDecimal retencionRenta;
-
-    @Positive
-    @Digits(integer = 6, fraction = 2)
-    private BigDecimal sueldoNeto;
 
     @NonNull
     private Usuario usuario;

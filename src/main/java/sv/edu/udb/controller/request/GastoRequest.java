@@ -24,7 +24,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class GastoRequest {
     @NotBlank
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/YYYY")
     private Month mes;
 
     @Positive

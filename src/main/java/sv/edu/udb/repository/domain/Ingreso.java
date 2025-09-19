@@ -1,5 +1,6 @@
 package sv.edu.udb.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,12 +41,14 @@ public class Ingreso {
     @Column(precision = 10, scale = 2)
     private BigDecimal sueldoNeto;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
+    @JsonBackReference
     private Usuario usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idPresupuesto")
+    @JsonBackReference
     private Presupuesto presupuesto;
 
     public void calcularRetenciones() {

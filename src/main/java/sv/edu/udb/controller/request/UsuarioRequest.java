@@ -3,6 +3,7 @@ package sv.edu.udb.controller.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import sv.edu.udb.repository.domain.Gasto;
@@ -25,7 +26,6 @@ public class UsuarioRequest {
     private String username;
 
     @NotBlank
-    @Size(min = 8, max = 32)
     private String password;
 
     private List<Ingreso> ingresos;

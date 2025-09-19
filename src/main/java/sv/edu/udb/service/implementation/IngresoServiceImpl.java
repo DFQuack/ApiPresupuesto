@@ -3,6 +3,7 @@ package sv.edu.udb.service.implementation;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sv.edu.udb.controller.request.IngresoRequest;
 import sv.edu.udb.controller.response.IngresoResponse;
@@ -13,8 +14,8 @@ import sv.edu.udb.service.mapper.IngresoMapper;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class IngresoServiceImpl implements IngresoService {
     @NonNull
     private final IngresoRepository ingresoRepo;
@@ -35,6 +36,7 @@ public class IngresoServiceImpl implements IngresoService {
     @Override
     public IngresoResponse save(IngresoRequest ingresoRequest) {
         final Ingreso ingreso = ingresoMapper.toIngreso(ingresoRequest);
+        ingreso.calcularRetenciones();
         return ingresoMapper.toIngresoResponse(ingresoRepo.save(ingreso));
     }
 
@@ -45,10 +47,7 @@ public class IngresoServiceImpl implements IngresoService {
         ingresoToUpdate.setNombre(ingresoRequest.getNombre());
         ingresoToUpdate.setSueldo(ingresoRequest.getSueldo());
         ingresoToUpdate.setIngresoFormal(ingresoRequest.getIngresoFormal());
-        ingresoToUpdate.setRetencionAFP(ingresoRequest.getRetencionAFP());
-        ingresoToUpdate.setRetencionISSS(ingresoRequest.getRetencionISSS());
-        ingresoToUpdate.setRetencionRenta(ingresoRequest.getRetencionRenta());
-        ingresoToUpdate.setSueldoNeto(ingresoRequest.getSueldoNeto());
+        ingresoToUpdate.calcularRetenciones();
 
         ingresoRepo.save(ingresoToUpdate);
         return ingresoMapper.toIngresoResponse(ingresoToUpdate);

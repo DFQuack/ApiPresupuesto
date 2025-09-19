@@ -1,5 +1,6 @@
 package sv.edu.udb.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.Month;
 
 @Entity
-@Table(name = "gasto_mensual")
+@Table(name = "gasto")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,8 +36,9 @@ public class Gasto {
     @Column(precision = 10, scale = 2)
     private BigDecimal ahorro;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
+    @JsonBackReference
     private Usuario usuario;
 
     public void setId(long l) {

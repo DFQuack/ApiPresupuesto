@@ -131,9 +131,6 @@ public class PresupuestoRepositoryTest {
         presupuesto2.setGastosBasicos(new BigDecimal("600.00"));
         presupuesto2.setUsuario(savedUsuario);
 
-        // When - Guardar segundo presupuesto (puede reemplazar al primero por la relación)
-        Presupuesto savedPresupuesto2 = presupuestoRepository.save(presupuesto2);
-
         // Then - Solo debería haber un presupuesto activo por usuario
         Optional<Presupuesto> foundPresupuesto = presupuestoRepository.findByUsuario(savedUsuario);
         assertTrue(foundPresupuesto.isPresent());

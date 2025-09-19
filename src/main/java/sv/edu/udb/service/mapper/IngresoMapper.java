@@ -1,6 +1,7 @@
 package sv.edu.udb.service.mapper;
 
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 import sv.edu.udb.controller.request.IngresoRequest;
 import sv.edu.udb.controller.response.IngresoResponse;
 import sv.edu.udb.repository.domain.Ingreso;
@@ -12,4 +13,5 @@ public interface IngresoMapper {
     IngresoResponse toIngresoResponse(final Ingreso ingreso);
     List<IngresoResponse> toIngresoResponseList(final List<Ingreso> ingresoList);
     Ingreso toIngreso(final IngresoRequest ingresoRequest);
+    IngresoRequest toIngresoRequest(final Ingreso ingreso);
 }

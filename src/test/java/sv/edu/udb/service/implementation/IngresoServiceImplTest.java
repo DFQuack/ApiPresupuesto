@@ -69,10 +69,6 @@ class IngresoServiceImplTest {
                 .nombre("Salario Mensual")
                 .sueldo(new BigDecimal("1500.00"))
                 .ingresoFormal(true)
-                .retencionAFP(new BigDecimal("150.00"))
-                .retencionISSS(new BigDecimal("45.00"))
-                .retencionRenta(new BigDecimal("105.00"))
-                .sueldoNeto(new BigDecimal("1200.00"))
                 .usuario(usuario)
                 .presupuesto(presupuesto)
                 .build();
