@@ -30,10 +30,9 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public UsuarioResponse saveUsuario(UsuarioRequest usuarioRequest) {
+    public UsuarioResponse saveUsuario(@Valid @RequestBody UsuarioRequest usuarioRequest) {
         return usuarioService.save(usuarioRequest);
     }
-
     @PutMapping(path = "{id}")
     public UsuarioResponse update(@PathVariable(name = "id") final Long id, @Valid @RequestBody final UsuarioRequest usuarioRequest) {
         return usuarioService.update(id, usuarioRequest);

@@ -32,12 +32,13 @@ public class IngresoController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public IngresoResponse saveIngreso(final IngresoRequest ingresoRequest) {
+    public IngresoResponse saveIngreso(@Valid @RequestBody final IngresoRequest ingresoRequest) {
         return ingresoService.save(ingresoRequest);
     }
 
     @PutMapping(path = "{id}")
-    public IngresoResponse updateIngreso(@PathVariable(name = "id") final Long id, @Valid @RequestBody final IngresoRequest ingresoRequest) {
+    public IngresoResponse updateIngreso(@PathVariable final Long id,
+                                         @Valid @RequestBody final IngresoRequest ingresoRequest) {
         return ingresoService.update(id, ingresoRequest);
     }
 

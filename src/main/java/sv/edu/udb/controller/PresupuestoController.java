@@ -30,12 +30,13 @@ public class PresupuestoController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public PresupuestoResponse savePresupuesto(final PresupuestoRequest presRequest) {
+    public PresupuestoResponse savePresupuesto(@Valid @RequestBody final PresupuestoRequest presRequest) {
         return presService.save(presRequest);
     }
 
     @PutMapping(path = "{id}")
-    public PresupuestoResponse updatePresupuesto(@PathVariable(name = "id") final Long id, @Valid @RequestBody final PresupuestoRequest presRequest) {
+    public PresupuestoResponse updatePresupuesto(@PathVariable final Long id,
+                                                 @Valid @RequestBody final PresupuestoRequest presRequest) {
         return presService.update(id, presRequest);
     }
 

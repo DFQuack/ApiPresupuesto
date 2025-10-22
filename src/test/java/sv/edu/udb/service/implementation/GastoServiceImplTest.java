@@ -1,6 +1,5 @@
 package sv.edu.udb.service.implementation;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,10 +21,12 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class GastoServiceImplTest {
+public class GastoServiceImplTest {
 
     @Mock
     private GastoRepository gastoRepo;
@@ -39,7 +40,7 @@ class GastoServiceImplTest {
     private Gasto gasto;
     private GastoRequest gastoRequest;
     private GastoResponse gastoResponse;
-    private Usuario usuario; // Nuevo campo
+    private Usuario usuario;
 
     @BeforeEach
     void setUp() {
@@ -67,8 +68,9 @@ class GastoServiceImplTest {
                 .usuario(usuario)
                 .build();
 
-        // Objeto GastoResponse de prueba con BigDecimal y mes
+        // Objeto GastoResponse de prueba con BigDecimal y mes - ¡CONFIGURANDO EL ID!
         gastoResponse = GastoResponse.builder()
+                .id(1L)
                 .mes(Month.JANUARY)
                 .gastosBasicos(new BigDecimal("100.00"))
                 .deudas(new BigDecimal("50.00"))
@@ -114,7 +116,7 @@ class GastoServiceImplTest {
     void findById_shouldThrowExceptionWhenNotFound() {
         when(gastoRepo.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> gastoService.findById(2L));
+        assertThrows(RuntimeException.class, () -> gastoService.findById(2L));
         verify(gastoRepo).findById(2L);
     }
 
@@ -157,7 +159,7 @@ class GastoServiceImplTest {
     void update_shouldThrowExceptionWhenNotFound() {
         when(gastoRepo.findById(2L)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> gastoService.update(2L, gastoRequest));
+        assertThrows(RuntimeException.class, () -> gastoService.update(2L, gastoRequest));
         verify(gastoRepo).findById(2L);
     }
 

@@ -32,12 +32,13 @@ public class GastoController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public GastoResponse saveGasto(final GastoRequest gastoRequest) {
+    public GastoResponse saveGasto(@Valid @RequestBody final GastoRequest gastoRequest) {
         return gastoService.save(gastoRequest);
     }
 
     @PutMapping(path = "{id}")
-    public GastoResponse updateGasto(@PathVariable(name = "id") final Long id, @Valid @RequestBody final GastoRequest gastoRequest) {
+    public GastoResponse updateGasto(@PathVariable(name = "id") final Long id,
+                                     @Valid @RequestBody final GastoRequest gastoRequest) {
         return gastoService.update(id, gastoRequest);
     }
 
