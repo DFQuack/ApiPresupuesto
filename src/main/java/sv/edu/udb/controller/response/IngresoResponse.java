@@ -1,23 +1,28 @@
 package sv.edu.udb.controller.response;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import lombok.experimental.FieldNameConstants;
-import sv.edu.udb.repository.domain.Presupuesto;
-import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Getter
 @Setter
 @Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldNameConstants
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(NON_NULL)
 public class IngresoResponse {
+    private Long id;
     private String nombre;
     private BigDecimal sueldo;
     private Boolean ingresoFormal;
-    private BigDecimal retencionAFP, retencionISSS, retencionRenta, sueldoNeto;
-    private Usuario usuario;
-    private Presupuesto presupuesto;
+
+    private Long usuarioId;
+    private Long presupuestoId;
 }

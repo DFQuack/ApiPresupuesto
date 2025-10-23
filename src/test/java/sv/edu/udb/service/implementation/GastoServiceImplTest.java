@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sv.edu.udb.controller.request.GastoRequest;
 import sv.edu.udb.controller.response.GastoResponse;
 import sv.edu.udb.repository.GastoRepository;
+import sv.edu.udb.repository.UsuarioRepository;
 import sv.edu.udb.repository.domain.Gasto;
 import sv.edu.udb.repository.domain.Usuario;
 import sv.edu.udb.service.mapper.GastoMapper;
@@ -32,6 +33,9 @@ public class GastoServiceImplTest {
     private GastoRepository gastoRepo;
 
     @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
     private GastoMapper gastoMapper;
 
     @InjectMocks
@@ -44,11 +48,12 @@ public class GastoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        // Objeto Usuario de prueba
+
         usuario = new Usuario();
         usuario.setId(1L);
+        usuario.setUsername("usuario1");
 
-        // Objeto Gasto de prueba con BigDecimal y mes
+
         gasto = new Gasto();
         gasto.setId(1L);
         gasto.setMes(Month.JANUARY);
@@ -58,17 +63,17 @@ public class GastoServiceImplTest {
         gasto.setAhorro(new BigDecimal("30.00"));
         gasto.setUsuario(usuario);
 
-        // Objeto GastoRequest de prueba con BigDecimal y mes
+
         gastoRequest = GastoRequest.builder()
                 .mes(Month.JANUARY)
                 .gastosBasicos(new BigDecimal("100.00"))
                 .deudas(new BigDecimal("50.00"))
                 .otrosGastos(new BigDecimal("20.00"))
                 .ahorro(new BigDecimal("30.00"))
-                .usuario(usuario)
+                .usuarioId(1L)
                 .build();
 
-        // Objeto GastoResponse de prueba con BigDecimal y mes - ¡CONFIGURANDO EL ID!
+
         gastoResponse = GastoResponse.builder()
                 .id(1L)
                 .mes(Month.JANUARY)
@@ -76,7 +81,7 @@ public class GastoServiceImplTest {
                 .deudas(new BigDecimal("50.00"))
                 .otrosGastos(new BigDecimal("20.00"))
                 .ahorro(new BigDecimal("30.00"))
-                .usuario(usuario)
+                .usuarioId(1L)
                 .build();
     }
 
@@ -91,6 +96,7 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
+        assertEquals(1L, result.get(0).getUsuarioId());
         verify(gastoRepo).findByUsuario_Id(1L);
         verify(gastoMapper).toGastoResponseList(Collections.singletonList(gasto));
     }
@@ -107,6 +113,7 @@ public class GastoServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
         assertEquals(new BigDecimal("100.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());
         verify(gastoRepo).findById(1L);
         verify(gastoMapper).toGastoResponse(gasto);
     }
@@ -123,6 +130,8 @@ public class GastoServiceImplTest {
     @Test
     @DisplayName("Debería guardar un nuevo gasto")
     void save_shouldSaveNewGasto() {
+        // Mock del usuario
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(gastoMapper.toGasto(gastoRequest)).thenReturn(gasto);
         when(gastoRepo.save(gasto)).thenReturn(gasto);
         when(gastoMapper.toGastoResponse(gasto)).thenReturn(gastoResponse);
@@ -132,6 +141,7 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
+        assertEquals(1L, result.getUsuarioId());
         verify(gastoMapper).toGasto(gastoRequest);
         verify(gastoRepo).save(gasto);
         verify(gastoMapper).toGastoResponse(gasto);
@@ -141,6 +151,7 @@ public class GastoServiceImplTest {
     @DisplayName("Debería actualizar un gasto existente")
     void update_shouldUpdateExistingGasto() {
         when(gastoRepo.findById(1L)).thenReturn(Optional.of(gasto));
+        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(gastoRepo.save(any(Gasto.class))).thenReturn(gasto);
         when(gastoMapper.toGastoResponse(gasto)).thenReturn(gastoResponse);
 
@@ -149,6 +160,7 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
+        assertEquals(1L, result.getUsuarioId());
         verify(gastoRepo).findById(1L);
         verify(gastoRepo).save(gasto);
         verify(gastoMapper).toGastoResponse(gasto);

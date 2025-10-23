@@ -1,14 +1,12 @@
 package sv.edu.udb.controller.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Digits;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
-import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 import java.time.Month;
@@ -23,8 +21,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(NON_NULL)
 public class GastoRequest {
-    @NotBlank
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/YYYY")
+    @NotNull
     private Month mes;
 
     @Positive
@@ -43,6 +40,6 @@ public class GastoRequest {
     @Digits(integer = 6, fraction = 2)
     private BigDecimal ahorro;
 
-    @NonNull
-    private Usuario usuario;
+    @NotNull
+    private Long usuarioId;
 }

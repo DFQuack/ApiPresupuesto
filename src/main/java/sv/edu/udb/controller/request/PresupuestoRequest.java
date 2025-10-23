@@ -3,11 +3,10 @@ package sv.edu.udb.controller.request;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
-import sv.edu.udb.repository.domain.Ingreso;
-import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -38,9 +37,8 @@ public class PresupuestoRequest {
     @Digits(integer = 6, fraction = 2)
     private BigDecimal ahorro;
 
-    @NonNull
-    private Usuario usuario;
+    @NotNull
+    private Long usuarioId;
 
-    @NonNull
-    private List<Ingreso> ingresos;
+    private List<Long> ingresoIds;
 }

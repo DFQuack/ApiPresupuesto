@@ -1,20 +1,19 @@
 package sv.edu.udb.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sv.edu.udb.controller.request.UsuarioRequest;
 import sv.edu.udb.controller.response.UsuarioResponse;
 import sv.edu.udb.service.UsuarioService;
 
-import java.util.List;
+import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -22,47 +21,41 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 class UsuarioControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @Mock
-    private UsuarioService usuarioService;
-
-    @InjectMocks
-    private UsuarioController usuarioController;
-
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @MockitoBean
+    private UsuarioService usuarioService;
 
     private UsuarioRequest usuarioRequest;
     private UsuarioResponse usuarioResponse;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(usuarioController).build();
-
-        objectMapper = new ObjectMapper();
-        objectMapper.findAndRegisterModules();
-        objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
-
-        // Request mínimo, solo campos serializables
         usuarioRequest = UsuarioRequest.builder()
                 .username("usuario1")
                 .password("123456")
                 .build();
 
-        // Response mínimo
         usuarioResponse = UsuarioResponse.builder()
                 .username("usuario1")
+                .password("123456")
                 .build();
     }
 
     @Test
     void testFindAllUsuarios() throws Exception {
-        when(usuarioService.findAll()).thenReturn(List.of(usuarioResponse));
+        when(usuarioService.findAll()).thenReturn(Arrays.asList(usuarioResponse));
 
-        mockMvc.perform(get("/usuarios"))
+        mockMvc.perform(get("/usuarios")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].username").value("usuario1"));
 
@@ -73,7 +66,8 @@ class UsuarioControllerTest {
     void testFindUsuarioById() throws Exception {
         when(usuarioService.findById(1L)).thenReturn(usuarioResponse);
 
-        mockMvc.perform(get("/usuarios/1"))
+        mockMvc.perform(get("/usuarios/1")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("usuario1"));
 
@@ -116,4 +110,3 @@ class UsuarioControllerTest {
         verify(usuarioService, times(1)).deleteById(1L);
     }
 }
-

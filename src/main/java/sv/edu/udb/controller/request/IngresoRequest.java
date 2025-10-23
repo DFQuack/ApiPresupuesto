@@ -1,12 +1,9 @@
 package sv.edu.udb.controller.request;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import sv.edu.udb.repository.domain.Presupuesto;
-import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 
@@ -28,9 +25,9 @@ public class IngresoRequest {
     private BigDecimal sueldo;
 
     private Boolean ingresoFormal;
+    
+    @NotNull
+    private Long usuarioId;
 
-    @NonNull
-    private Usuario usuario;
-
-    private Presupuesto presupuesto;
+    private Long presupuestoId;
 }

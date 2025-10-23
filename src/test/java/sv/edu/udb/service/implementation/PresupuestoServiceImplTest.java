@@ -18,6 +18,7 @@ import sv.edu.udb.service.mapper.PresupuestoMapper;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,24 +61,25 @@ class PresupuestoServiceImplTest {
         presupuesto.setUsuario(usuario);
         presupuesto.setIngresos(Collections.singletonList(ingreso));
 
-        // Objeto PresupuestoRequest de prueba
+        // Objeto PresupuestoRequest de prueba - ACTUALIZADO
         presupuestoRequest = PresupuestoRequest.builder()
                 .gastosBasicos(new BigDecimal("500.00"))
                 .deudas(new BigDecimal("200.00"))
                 .otrosGastos(new BigDecimal("150.00"))
                 .ahorro(new BigDecimal("150.00"))
-                .usuario(usuario)
-                .ingresos(Collections.singletonList(ingreso))
+                .usuarioId(1L)  // Cambiado de usuario a usuarioId
+                .ingresoIds(List.of(1L))  // Cambiado de ingresos a ingresoIds
                 .build();
 
-        // Objeto PresupuestoResponse de prueba
+        // Objeto PresupuestoResponse de prueba - ACTUALIZADO
         presupuestoResponse = PresupuestoResponse.builder()
+                .id(1L)  // Agregado id
                 .gastosBasicos(new BigDecimal("500.00"))
                 .deudas(new BigDecimal("200.00"))
                 .otrosGastos(new BigDecimal("150.00"))
                 .ahorro(new BigDecimal("150.00"))
-                .usuario(usuario)
-                .ingresos(Collections.singletonList(ingreso))
+                .usuarioId(1L)  // Cambiado de usuario a usuarioId
+                .ingresoIds(List.of(1L))  // Cambiado de ingresos a ingresoIds
                 .build();
     }
 
@@ -91,6 +93,8 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());  // Verificando usuarioId
+        assertEquals(List.of(1L), result.getIngresoIds());  // Verificando ingresoIds
         verify(presRepo).findByUsuario_Id(1L);
         verify(presMapper).toPresResponse(presupuesto);
     }
@@ -105,6 +109,8 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());  // Verificando usuarioId
+        assertEquals(List.of(1L), result.getIngresoIds());  // Verificando ingresoIds
         verify(presRepo).findById(1L);
         verify(presMapper).toPresResponse(presupuesto);
     }
@@ -129,6 +135,8 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());  // Verificando usuarioId
+        assertEquals(List.of(1L), result.getIngresoIds());  // Verificando ingresoIds
         verify(presMapper).toPresupuesto(presupuestoRequest);
         verify(presRepo).save(presupuesto);
         verify(presMapper).toPresResponse(presupuesto);
@@ -145,6 +153,8 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());  // Verificando usuarioId
+        assertEquals(List.of(1L), result.getIngresoIds());  // Verificando ingresoIds
         verify(presRepo).findById(1L);
         verify(presRepo).save(presupuesto);
         verify(presMapper).toPresResponse(presupuesto);
@@ -167,5 +177,115 @@ class PresupuestoServiceImplTest {
         presupuestoService.deleteById(1L);
 
         verify(presRepo).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Debería manejar presupuesto sin ingresos asignados")
+    void save_shouldHandlePresupuestoWithoutIngresos() {
+        // Request sin ingresoIds
+        PresupuestoRequest requestWithoutIngresos = PresupuestoRequest.builder()
+                .gastosBasicos(new BigDecimal("400.00"))
+                .deudas(new BigDecimal("100.00"))
+                .otrosGastos(new BigDecimal("100.00"))
+                .ahorro(new BigDecimal("200.00"))
+                .usuarioId(1L)
+                .ingresoIds(null)  // ingresoIds null
+                .build();
+
+        // Presupuesto sin ingresos
+        Presupuesto presupuestoWithoutIngresos = new Presupuesto();
+        presupuestoWithoutIngresos.setId(2L);
+        presupuestoWithoutIngresos.setGastosBasicos(new BigDecimal("400.00"));
+        presupuestoWithoutIngresos.setDeudas(new BigDecimal("100.00"));
+        presupuestoWithoutIngresos.setOtrosGastos(new BigDecimal("100.00"));
+        presupuestoWithoutIngresos.setAhorro(new BigDecimal("200.00"));
+        presupuestoWithoutIngresos.setUsuario(usuario);
+        presupuestoWithoutIngresos.setIngresos(null);  // ingresos null
+
+        // Response sin ingresoIds
+        PresupuestoResponse responseWithoutIngresos = PresupuestoResponse.builder()
+                .id(2L)
+                .gastosBasicos(new BigDecimal("400.00"))
+                .deudas(new BigDecimal("100.00"))
+                .otrosGastos(new BigDecimal("100.00"))
+                .ahorro(new BigDecimal("200.00"))
+                .usuarioId(1L)
+                .ingresoIds(null)  // ingresoIds null
+                .build();
+
+        when(presMapper.toPresupuesto(requestWithoutIngresos)).thenReturn(presupuestoWithoutIngresos);
+        when(presRepo.save(presupuestoWithoutIngresos)).thenReturn(presupuestoWithoutIngresos);
+        when(presMapper.toPresResponse(presupuestoWithoutIngresos)).thenReturn(responseWithoutIngresos);
+
+        PresupuestoResponse result = presupuestoService.save(requestWithoutIngresos);
+
+        assertNotNull(result);
+        assertEquals(new BigDecimal("400.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());
+        assertNull(result.getIngresoIds());  // Verificar que ingresoIds es null
+        verify(presMapper).toPresupuesto(requestWithoutIngresos);
+        verify(presRepo).save(presupuestoWithoutIngresos);
+        verify(presMapper).toPresResponse(presupuestoWithoutIngresos);
+    }
+
+    @Test
+    @DisplayName("Debería manejar presupuesto con lista vacía de ingresos")
+    void save_shouldHandlePresupuestoWithEmptyIngresos() {
+        // Request con lista vacía de ingresoIds
+        PresupuestoRequest requestWithEmptyIngresos = PresupuestoRequest.builder()
+                .gastosBasicos(new BigDecimal("300.00"))
+                .deudas(new BigDecimal("50.00"))
+                .otrosGastos(new BigDecimal("50.00"))
+                .ahorro(new BigDecimal("200.00"))
+                .usuarioId(1L)
+                .ingresoIds(List.of())  // Lista vacía
+                .build();
+
+        // Presupuesto con lista vacía de ingresos
+        Presupuesto presupuestoWithEmptyIngresos = new Presupuesto();
+        presupuestoWithEmptyIngresos.setId(3L);
+        presupuestoWithEmptyIngresos.setGastosBasicos(new BigDecimal("300.00"));
+        presupuestoWithEmptyIngresos.setDeudas(new BigDecimal("50.00"));
+        presupuestoWithEmptyIngresos.setOtrosGastos(new BigDecimal("50.00"));
+        presupuestoWithEmptyIngresos.setAhorro(new BigDecimal("200.00"));
+        presupuestoWithEmptyIngresos.setUsuario(usuario);
+        presupuestoWithEmptyIngresos.setIngresos(List.of());  // Lista vacía
+
+        // Response con lista vacía de ingresoIds
+        PresupuestoResponse responseWithEmptyIngresos = PresupuestoResponse.builder()
+                .id(3L)
+                .gastosBasicos(new BigDecimal("300.00"))
+                .deudas(new BigDecimal("50.00"))
+                .otrosGastos(new BigDecimal("50.00"))
+                .ahorro(new BigDecimal("200.00"))
+                .usuarioId(1L)
+                .ingresoIds(List.of())  // Lista vacía
+                .build();
+
+        when(presMapper.toPresupuesto(requestWithEmptyIngresos)).thenReturn(presupuestoWithEmptyIngresos);
+        when(presRepo.save(presupuestoWithEmptyIngresos)).thenReturn(presupuestoWithEmptyIngresos);
+        when(presMapper.toPresResponse(presupuestoWithEmptyIngresos)).thenReturn(responseWithEmptyIngresos);
+
+        PresupuestoResponse result = presupuestoService.save(requestWithEmptyIngresos);
+
+        assertNotNull(result);
+        assertEquals(new BigDecimal("300.00"), result.getGastosBasicos());
+        assertEquals(1L, result.getUsuarioId());
+        assertTrue(result.getIngresoIds().isEmpty());  // Verificar que la lista está vacía
+        verify(presMapper).toPresupuesto(requestWithEmptyIngresos);
+        verify(presRepo).save(presupuestoWithEmptyIngresos);
+        verify(presMapper).toPresResponse(presupuestoWithEmptyIngresos);
+    }
+
+    @Test
+    @DisplayName("Debería retornar null cuando no encuentra presupuesto por usuario")
+    void findByUsuario_shouldReturnNullWhenNotFound() {
+        when(presRepo.findByUsuario_Id(99L)).thenReturn(null);
+
+        PresupuestoResponse result = presupuestoService.findByUsuario(99L);
+
+        assertNull(result);
+        verify(presRepo).findByUsuario_Id(99L);
+        verify(presMapper, never()).toPresResponse(any());  // No debe llamar al mapper
     }
 }
