@@ -55,24 +55,24 @@ class PresupuestoControllerTest {
         usuario.setId(1L);
         ingreso.setId(1L);
 
-        // ACTUALIZADO: Usar IDs en lugar de objetos completos
+        // CORREGIDO: Usar objeto Usuario completo según PresupuestoRequest
         presRequest = PresupuestoRequest.builder()
                 .gastosBasicos(BigDecimal.valueOf(100.00))
                 .deudas(BigDecimal.valueOf(50.00))
                 .otrosGastos(BigDecimal.valueOf(30.00))
                 .ahorro(BigDecimal.valueOf(20.00))
-                .usuarioId(1L)  // Cambiado de usuario a usuarioId
+                .usuario(usuario)  // Cambiado de usuarioId a usuario (objeto completo)
                 .build();
 
-        // ACTUALIZADO: Usar IDs en lugar de objetos completos
+        // CORREGIDO: Mantener estructura original según PresupuestoResponse
         presResponse = PresupuestoResponse.builder()
-                .id(1L)  // Agregado id
+                .id(1L)
                 .gastosBasicos(BigDecimal.valueOf(100.00))
                 .deudas(BigDecimal.valueOf(50.00))
                 .otrosGastos(BigDecimal.valueOf(30.00))
                 .ahorro(BigDecimal.valueOf(20.00))
-                .usuario(usuario)  // Cambiado de usuario a usuarioId
-                .ingresos(List.of(ingreso))  // Cambiado de ingresos a ingresoIds
+                .usuario(usuario)
+                .ingresos(List.of(ingreso))
                 .build();
     }
 
@@ -86,7 +86,9 @@ class PresupuestoControllerTest {
                 .andExpect(jsonPath("$.gastosBasicos").value(100.0))
                 .andExpect(jsonPath("$.deudas").value(50.0))
                 .andExpect(jsonPath("$.otrosGastos").value(30.0))
-                .andExpect(jsonPath("$.ahorro").value(20.0));
+                .andExpect(jsonPath("$.ahorro").value(20.0))
+                .andExpect(jsonPath("$.usuario.id").value(1)) // Verificar usuario completo
+                .andExpect(jsonPath("$.ingresos[0].id").value(1)); // Verificar ingresos
 
         verify(presService, times(1)).findByUsuario(1L);
     }
@@ -101,7 +103,9 @@ class PresupuestoControllerTest {
                 .andExpect(jsonPath("$.gastosBasicos").value(100.0))
                 .andExpect(jsonPath("$.deudas").value(50.0))
                 .andExpect(jsonPath("$.otrosGastos").value(30.0))
-                .andExpect(jsonPath("$.ahorro").value(20.0));
+                .andExpect(jsonPath("$.ahorro").value(20.0))
+                .andExpect(jsonPath("$.usuario.id").value(1))
+                .andExpect(jsonPath("$.ingresos[0].id").value(1));
 
         verify(presService, times(1)).findById(1L);
     }
@@ -118,7 +122,9 @@ class PresupuestoControllerTest {
                 .andExpect(jsonPath("$.gastosBasicos").value(100.0))
                 .andExpect(jsonPath("$.deudas").value(50.0))
                 .andExpect(jsonPath("$.otrosGastos").value(30.0))
-                .andExpect(jsonPath("$.ahorro").value(20.0));
+                .andExpect(jsonPath("$.ahorro").value(20.0))
+                .andExpect(jsonPath("$.usuario.id").value(1))
+                .andExpect(jsonPath("$.ingresos[0].id").value(1));
 
         verify(presService, times(1)).save(any(PresupuestoRequest.class));
     }
@@ -135,7 +141,10 @@ class PresupuestoControllerTest {
                 .andExpect(jsonPath("$.gastosBasicos").value(100.0))
                 .andExpect(jsonPath("$.deudas").value(50.0))
                 .andExpect(jsonPath("$.otrosGastos").value(30.0))
-                .andExpect(jsonPath("$.ahorro").value(20.0));
+                .andExpect(jsonPath("$.ahorro").value(20.0))
+                .andExpect(jsonPath("$.usuario.id").value(1))
+                .andExpect(jsonPath("$.ingresos[0].id").value(1));
+
         verify(presService, times(1)).update(eq(1L), any(PresupuestoRequest.class));
     }
 
@@ -149,14 +158,13 @@ class PresupuestoControllerTest {
         verify(presService, times(1)).deleteById(1L);
     }
 
-
     @Test
     void testSavePresupuestoWithInvalidData() throws Exception {
         // Test con datos inválidos
         PresupuestoRequest invalidRequest = PresupuestoRequest.builder()
                 .gastosBasicos(BigDecimal.valueOf(-100))  // Violates @Positive
                 .deudas(BigDecimal.valueOf(-50))  // Violates @PositiveOrZero
-                .usuarioId(null)  // Violates @NotNull
+                .usuario(null)  // Violates @NotNull
                 .build();
 
         mockMvc.perform(post("/api/presupuestos")

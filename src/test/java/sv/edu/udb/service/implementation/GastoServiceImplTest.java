@@ -48,11 +48,9 @@ public class GastoServiceImplTest {
 
     @BeforeEach
     void setUp() {
-
         usuario = new Usuario();
         usuario.setId(1L);
         usuario.setUsername("usuario1");
-
 
         gasto = new Gasto();
         gasto.setId(1L);
@@ -63,16 +61,15 @@ public class GastoServiceImplTest {
         gasto.setAhorro(new BigDecimal("30.00"));
         gasto.setUsuario(usuario);
 
-
+        // CAMBIO: Usar usuario en lugar de usuarioId
         gastoRequest = GastoRequest.builder()
                 .mes(Month.JANUARY)
                 .gastosBasicos(new BigDecimal("100.00"))
                 .deudas(new BigDecimal("50.00"))
                 .otrosGastos(new BigDecimal("20.00"))
                 .ahorro(new BigDecimal("30.00"))
-                .usuarioId(1L)
+                .usuario(usuario)  // ← CAMBIO AQUÍ
                 .build();
-
 
         gastoResponse = GastoResponse.builder()
                 .id(1L)
@@ -130,7 +127,6 @@ public class GastoServiceImplTest {
     @Test
     @DisplayName("Debería guardar un nuevo gasto")
     void save_shouldSaveNewGasto() {
-        // Mock del usuario
         when(gastoMapper.toGasto(gastoRequest)).thenReturn(gasto);
         when(gastoRepo.save(gasto)).thenReturn(gasto);
         when(gastoMapper.toGastoResponse(gasto)).thenReturn(gastoResponse);
@@ -140,6 +136,7 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
+        assertNotNull(result.getUsuario());  // Verificar que el usuario está presente
         verify(gastoMapper).toGasto(gastoRequest);
         verify(gastoRepo).save(gasto);
         verify(gastoMapper).toGastoResponse(gasto);

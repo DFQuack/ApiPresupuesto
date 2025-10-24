@@ -40,14 +40,16 @@ class IngresoServiceImplTest {
     private IngresoRequest ingresoRequest;
     private IngresoResponse ingresoResponse;
     private Usuario usuario;
+    private Presupuesto presupuesto;
 
     @BeforeEach
     void setUp() {
         // Mock de objetos de dominio
         usuario = new Usuario();
         usuario.setId(1L);
+        usuario.setUsername("usuario1");
 
-        Presupuesto presupuesto = new Presupuesto();
+        presupuesto = new Presupuesto();
         presupuesto.setId(1L);
 
         // Objeto Ingreso de prueba
@@ -63,18 +65,18 @@ class IngresoServiceImplTest {
         ingreso.setUsuario(usuario);
         ingreso.setPresupuesto(presupuesto);
 
-        // Objeto IngresoRequest de prueba - ACTUALIZADO
+        // Objeto IngresoRequest de prueba - CORREGIDO
         ingresoRequest = IngresoRequest.builder()
                 .nombre("Salario Mensual")
                 .sueldo(new BigDecimal("1500.00"))
                 .ingresoFormal(true)
-                .usuarioId(1L)  // Cambiado de usuario a usuarioId
-                .presupuestoId(1L)  // Cambiado de presupuesto a presupuestoId
+                .usuario(usuario)  // ← CAMBIO: usuarioId -> usuario (objeto completo)
+                .presupuesto(presupuesto)  // ← Ya estaba bien
                 .build();
 
-        // Objeto IngresoResponse de prueba - ACTUALIZADO
+        // Objeto IngresoResponse de prueba
         ingresoResponse = IngresoResponse.builder()
-                .id(1L)  // Agregado id
+                .id(1L)
                 .nombre("Salario Mensual")
                 .sueldo(new BigDecimal("1500.00"))
                 .ingresoFormal(true)
@@ -95,7 +97,6 @@ class IngresoServiceImplTest {
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
 
-        // Verificar que el response tiene los campos correctos
         IngresoResponse response = result.get(0);
         assertEquals(1L, response.getId());
         assertEquals("Salario Mensual", response.getNombre());
@@ -191,13 +192,13 @@ class IngresoServiceImplTest {
     @Test
     @DisplayName("Debería manejar ingresos sin presupuesto asignado")
     void save_shouldHandleIngresoWithoutPresupuesto() {
-        // Request sin presupuestoId
+        // Request sin presupuesto - CORREGIDO
         IngresoRequest requestWithoutPresupuesto = IngresoRequest.builder()
                 .nombre("Ingreso Informal")
                 .sueldo(new BigDecimal("500.00"))
                 .ingresoFormal(false)
-                .usuarioId(1L)
-                .presupuestoId(null)  // presupuestoId nulo
+                .usuario(usuario)  // ← CAMBIO: usuarioId -> usuario (objeto completo)
+                .presupuesto(null)  // ← Presupuesto nulo
                 .build();
 
         // Ingreso sin presupuesto
@@ -207,16 +208,16 @@ class IngresoServiceImplTest {
         ingresoWithoutPresupuesto.setSueldo(new BigDecimal("500.00"));
         ingresoWithoutPresupuesto.setIngresoFormal(false);
         ingresoWithoutPresupuesto.setUsuario(usuario);
-        ingresoWithoutPresupuesto.setPresupuesto(null);  // presupuesto nulo
+        ingresoWithoutPresupuesto.setPresupuesto(null);
 
-        // Response sin presupuestoId
+        // Response sin presupuesto
         IngresoResponse responseWithoutPresupuesto = IngresoResponse.builder()
                 .id(2L)
                 .nombre("Ingreso Informal")
                 .sueldo(new BigDecimal("500.00"))
                 .ingresoFormal(false)
                 .usuario(usuario)
-                .presupuesto(null)  // presupuesto nulo
+                .presupuesto(null)
                 .build();
 
         when(ingresoMapper.toIngreso(requestWithoutPresupuesto)).thenReturn(ingresoWithoutPresupuesto);
@@ -227,7 +228,7 @@ class IngresoServiceImplTest {
 
         assertNotNull(result);
         assertEquals("Ingreso Informal", result.getNombre());
-        assertNull(result.getPresupuesto());  // Verificar que presupuesto es null
+        assertNull(result.getPresupuesto());
         verify(ingresoMapper).toIngreso(requestWithoutPresupuesto);
         verify(ingresoRepo).save(ingresoWithoutPresupuesto);
         verify(ingresoMapper).toIngresoResponse(ingresoWithoutPresupuesto);

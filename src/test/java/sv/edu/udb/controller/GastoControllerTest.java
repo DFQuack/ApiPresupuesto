@@ -16,7 +16,6 @@ import sv.edu.udb.service.GastoService;
 
 import java.math.BigDecimal;
 import java.time.Month;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -40,20 +39,22 @@ class GastoControllerTest {
 
     private GastoRequest gastoRequest;
     private GastoResponse gastoResponse;
-
-    final Usuario usuario = new Usuario();
+    private Usuario usuario;
 
     @BeforeEach
     void setUp() {
+        usuario = new Usuario();
         usuario.setId(1L);
+        usuario.setUsername("usuario1"); // Opcional: agregar más datos si es necesario
 
+        // CAMBIO: Usar usuario en lugar de usuarioId
         gastoRequest = GastoRequest.builder()
                 .mes(Month.JANUARY)
                 .gastosBasicos(BigDecimal.valueOf(100.00))
                 .deudas(BigDecimal.valueOf(50.00))
                 .otrosGastos(BigDecimal.valueOf(30.00))
                 .ahorro(BigDecimal.valueOf(20.00))
-                .usuarioId(1L)
+                .usuario(usuario)  // ← CAMBIO AQUÍ
                 .build();
 
         gastoResponse = GastoResponse.builder()

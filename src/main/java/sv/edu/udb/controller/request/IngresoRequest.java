@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import sv.edu.udb.repository.domain.Presupuesto;
+import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 
@@ -28,7 +29,7 @@ public class IngresoRequest {
     private Boolean ingresoFormal;
     
     @NotNull
-    private Long usuarioId;
+    private Usuario usuario;
 
     private Presupuesto presupuesto;
 }

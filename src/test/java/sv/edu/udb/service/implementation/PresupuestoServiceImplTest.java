@@ -59,24 +59,24 @@ class PresupuestoServiceImplTest {
         presupuesto.setUsuario(usuario);
         presupuesto.setIngresos(Collections.singletonList(ingreso));
 
-        // Objeto PresupuestoRequest de prueba - ACTUALIZADO
+        // CORREGIDO: Usar objeto Usuario completo según PresupuestoRequest
         presupuestoRequest = PresupuestoRequest.builder()
                 .gastosBasicos(new BigDecimal("500.00"))
                 .deudas(new BigDecimal("200.00"))
                 .otrosGastos(new BigDecimal("150.00"))
                 .ahorro(new BigDecimal("150.00"))
-                .usuarioId(1L)  // Cambiado de usuario a usuarioId
+                .usuario(usuario)  // Cambiado de usuarioId a usuario (objeto completo)
                 .build();
 
-        // Objeto PresupuestoResponse de prueba - ACTUALIZADO
+        // CORREGIDO: Mantener estructura original según PresupuestoResponse
         presupuestoResponse = PresupuestoResponse.builder()
-                .id(1L)  // Agregado id
+                .id(1L)
                 .gastosBasicos(new BigDecimal("500.00"))
                 .deudas(new BigDecimal("200.00"))
                 .otrosGastos(new BigDecimal("150.00"))
                 .ahorro(new BigDecimal("150.00"))
-                .usuario(usuario)  // Cambiado de usuario a usuarioId
-                .ingresos(List.of(ingreso))  // Cambiado de ingresos a ingresoIds
+                .usuario(usuario)
+                .ingresos(List.of(ingreso))
                 .build();
     }
 
@@ -90,8 +90,11 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
-        assertNotNull(result.getUsuario());  // Verificando usuario
-        assertNotNull(result.getIngresos());  // Verificando ingreso
+        assertNotNull(result.getUsuario());
+        assertEquals(1L, result.getUsuario().getId());
+        assertNotNull(result.getIngresos());
+        assertFalse(result.getIngresos().isEmpty());
+        assertEquals(1L, result.getIngresos().get(0).getId());
         verify(presRepo).findByUsuario_Id(1L);
         verify(presMapper).toPresResponse(presupuesto);
     }
@@ -106,8 +109,11 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
-        assertNotNull(result.getUsuario());  // Verificando usuario
-        assertNotNull(result.getIngresos());  // Verificando ingreso
+        assertNotNull(result.getUsuario());
+        assertEquals(1L, result.getUsuario().getId());
+        assertNotNull(result.getIngresos());
+        assertFalse(result.getIngresos().isEmpty());
+        assertEquals(1L, result.getIngresos().get(0).getId());
         verify(presRepo).findById(1L);
         verify(presMapper).toPresResponse(presupuesto);
     }
@@ -132,8 +138,11 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
-        assertNotNull(result.getUsuario());  // Verificando usuario
-        assertNotNull(result.getIngresos());  // Verificando ingreso
+        assertNotNull(result.getUsuario());
+        assertEquals(1L, result.getUsuario().getId());
+        assertNotNull(result.getIngresos());
+        assertFalse(result.getIngresos().isEmpty());
+        assertEquals(1L, result.getIngresos().get(0).getId());
         verify(presMapper).toPresupuesto(presupuestoRequest);
         verify(presRepo).save(presupuesto);
         verify(presMapper).toPresResponse(presupuesto);
@@ -150,8 +159,11 @@ class PresupuestoServiceImplTest {
 
         assertNotNull(result);
         assertEquals(new BigDecimal("500.00"), result.getGastosBasicos());
-        assertNotNull(result.getUsuario());  // Verificando usuario
-        assertNotNull(result.getIngresos());  // Verificando ingreso
+        assertNotNull(result.getUsuario());
+        assertEquals(1L, result.getUsuario().getId());
+        assertNotNull(result.getIngresos());
+        assertFalse(result.getIngresos().isEmpty());
+        assertEquals(1L, result.getIngresos().get(0).getId());
         verify(presRepo).findById(1L);
         verify(presRepo).save(presupuesto);
         verify(presMapper).toPresResponse(presupuesto);

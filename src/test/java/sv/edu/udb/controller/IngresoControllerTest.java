@@ -15,7 +15,6 @@ import sv.edu.udb.controller.response.IngresoResponse;
 import sv.edu.udb.repository.domain.Presupuesto;
 import sv.edu.udb.repository.domain.Usuario;
 import sv.edu.udb.service.IngresoService;
-import sv.edu.udb.service.mapper.IngresoMapper;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,9 +39,8 @@ class IngresoControllerTest {
 
     private IngresoRequest ingresoRequest;
     private IngresoResponse ingresoResponse;
-
-    final Usuario usuario = new Usuario();
-    final Presupuesto presupuesto = new Presupuesto();
+    private Usuario usuario;
+    private Presupuesto presupuesto;
 
     @BeforeEach
     void setUp() {
@@ -53,16 +51,20 @@ class IngresoControllerTest {
         objectMapper.findAndRegisterModules();
         objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
 
+        usuario = new Usuario();
         usuario.setId(1L);
+        usuario.setUsername("usuario1");
+
+        presupuesto = new Presupuesto();
         presupuesto.setId(1L);
 
-        // IngresoRequest con todos los campos
+        // IngresoRequest con objetos completos - CORREGIDO
         ingresoRequest = IngresoRequest.builder()
                 .nombre("Salario")
                 .sueldo(BigDecimal.valueOf(1000.00))
                 .ingresoFormal(true)
-                .usuarioId(1L)
-                .presupuestoId(1L)
+                .usuario(usuario)  // ← CAMBIO: usuarioId -> usuario
+                .presupuesto(presupuesto)  // ← CAMBIO: presupuestoId -> presupuesto
                 .build();
 
         // IngresoResponse con todos los campos
@@ -148,11 +150,11 @@ class IngresoControllerTest {
 
     @Test
     void testSaveIngresoWithInvalidData() throws Exception {
-        // Test con datos inválidos
+        // Test con datos inválidos - CORREGIDO
         IngresoRequest invalidRequest = IngresoRequest.builder()
                 .nombre("") // Nombre vacío - viola @NotBlank
                 .sueldo(BigDecimal.valueOf(-100)) // Sueldo negativo - viola @Positive
-                .usuarioId(null) // UsuarioId nulo - viola @NotNull
+                .usuario(null) // ← CAMBIO: usuarioId -> usuario
                 .build();
 
         mockMvc.perform(post("/api/ingresos")
@@ -163,24 +165,22 @@ class IngresoControllerTest {
 
     @Test
     void testSaveIngresoWithValidDataButNullOptionalFields() throws Exception {
-        // Test con campos opcionales nulos - SOLUCIÓN AL ERROR
+        // Test con campos opcionales nulos - CORREGIDO
         IngresoRequest requestWithNullOptionalFields = IngresoRequest.builder()
                 .nombre("Salario Informal")
                 .sueldo(BigDecimal.valueOf(500.00))
                 .ingresoFormal(false)
-                .usuarioId(1L)
-                .presupuestoId(null) // presupuestoId puede ser null
+                .usuario(usuario)  // ← CAMBIO: usuarioId -> usuario
+                .presupuesto(null)  // ← CAMBIO: presupuestoId -> presupuesto
                 .build();
 
-        // Response con presupuestoId null - PERO como está anotado con @JsonInclude(NON_NULL)
-        // no se incluirá en el JSON, así que no debemos verificar su existencia
         IngresoResponse responseWithNullOptionalFields = IngresoResponse.builder()
                 .id(2L)
                 .nombre("Salario Informal")
                 .sueldo(BigDecimal.valueOf(500.00))
                 .ingresoFormal(false)
                 .usuario(usuario)
-                .presupuesto(null) // Este campo no estará en el JSON
+                .presupuesto(null)
                 .build();
 
         when(ingresoService.save(any(IngresoRequest.class))).thenReturn(responseWithNullOptionalFields);
@@ -193,29 +193,26 @@ class IngresoControllerTest {
                 .andExpect(jsonPath("$.nombre").value("Salario Informal"))
                 .andExpect(jsonPath("$.sueldo").value(500.0))
                 .andExpect(jsonPath("$.ingresoFormal").value(false))
-                // NO verificamos presupuestoId porque cuando es null, no se incluye en el JSON
-                // debido a @JsonInclude(NON_NULL)
                 .andExpect(jsonPath("$.presupuesto").doesNotExist()); // Verificar que NO existe
 
         verify(ingresoService, times(1)).save(any(IngresoRequest.class));
     }
 
-    // Test adicional para cuando ingresoFormal es null
     @Test
     void testSaveIngresoWithNullIngresoFormal() throws Exception {
         IngresoRequest requestWithNullIngresoFormal = IngresoRequest.builder()
                 .nombre("Ingreso Extra")
                 .sueldo(BigDecimal.valueOf(300.00))
-                .ingresoFormal(null) // ingresoFormal puede ser null
-                .usuarioId(1L)
-                .presupuestoId(2L)
+                .ingresoFormal(null)
+                .usuario(usuario)  // ← CAMBIO: usuarioId -> usuario
+                .presupuesto(presupuesto)  // ← CAMBIO: presupuestoId -> presupuesto
                 .build();
 
         IngresoResponse responseWithNullIngresoFormal = IngresoResponse.builder()
                 .id(3L)
                 .nombre("Ingreso Extra")
                 .sueldo(BigDecimal.valueOf(300.00))
-                .ingresoFormal(null) // No estará en el JSON
+                .ingresoFormal(null)
                 .usuario(usuario)
                 .presupuesto(presupuesto)
                 .build();
