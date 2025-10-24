@@ -35,8 +35,10 @@ public class Presupuesto {
 
     @OneToOne
     @JoinColumn(name = "idUsuario")
+    @JsonBackReference(value = "usuario-presupuesto")
     private Usuario usuario;
 
     @OneToMany(mappedBy = "presupuesto", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "presupuesto-ingresos")
     private List<Ingreso> ingresos;
 }

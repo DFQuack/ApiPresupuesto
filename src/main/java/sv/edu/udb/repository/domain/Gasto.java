@@ -38,5 +38,6 @@ public class Gasto {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
+    @JsonBackReference(value = "usuario-gastos")
     private Usuario usuario;
 }

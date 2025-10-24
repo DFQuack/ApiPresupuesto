@@ -24,12 +24,15 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ingreso> ingresos;
-
     @OneToOne(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "usuario-presupuesto")
     private Presupuesto presupuesto;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "usuario-ingresos")
+    private List<Ingreso> ingresos;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference(value = "usuario-gastos")
     private List<Gasto> gastos;
 }

@@ -26,8 +26,6 @@ public class UsuarioResponse {
     private Long id;
     private String username, password;
     private Presupuesto presupuesto;
-    @JsonManagedReference(value = "usuario-ingresos")
     private List<Ingreso> ingresos;
-    @JsonManagedReference(value = "usuario-gastos")
     private List<Gasto> gastos;
 }

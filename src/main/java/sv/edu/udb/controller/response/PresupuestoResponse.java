@@ -1,5 +1,6 @@
 package sv.edu.udb.controller.response;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -28,6 +29,5 @@ public class PresupuestoResponse {
     private BigDecimal otrosGastos;
     private BigDecimal ahorro;
     private Usuario usuario;
-    @JsonManagedReference(value = "presupuesto-ingresos")
     private List<Ingreso> ingresos;
 }

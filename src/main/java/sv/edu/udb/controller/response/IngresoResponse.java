@@ -25,9 +25,6 @@ public class IngresoResponse {
     private String nombre;
     private BigDecimal sueldo;
     private Boolean ingresoFormal;
-
-    @JsonBackReference(value = "usuario-ingresos")
     private Usuario usuario;
-    @JsonBackReference(value = "presupuesto-ingresos")
     private Presupuesto presupuesto;
 }

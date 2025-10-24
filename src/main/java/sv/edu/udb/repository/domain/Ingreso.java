@@ -41,10 +41,12 @@ public class Ingreso {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
+    @JsonBackReference(value = "usuario-ingresos")
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idPresupuesto")
+    @JsonBackReference(value = "presupuesto-ingresos")
     private Presupuesto presupuesto;
 
     public void calcularRetenciones() {

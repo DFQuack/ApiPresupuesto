@@ -27,6 +27,5 @@ public class GastoResponse {
     private BigDecimal deudas;
     private BigDecimal otrosGastos;
     private BigDecimal ahorro;
-    @JsonBackReference(value = "usuario-gastos")
     private Usuario usuario;
 }
