@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sv.edu.udb.controller.request.IngresoRequest;
 import sv.edu.udb.controller.response.IngresoResponse;
+import sv.edu.udb.repository.domain.Presupuesto;
+import sv.edu.udb.repository.domain.Usuario;
 import sv.edu.udb.service.IngresoService;
 import sv.edu.udb.service.mapper.IngresoMapper;
 
@@ -31,9 +33,6 @@ class IngresoControllerTest {
     @Mock
     private IngresoService ingresoService;
 
-    @Mock
-    private IngresoMapper ingresoMapper;
-
     @InjectMocks
     private IngresoController ingresoController;
 
@@ -41,6 +40,9 @@ class IngresoControllerTest {
 
     private IngresoRequest ingresoRequest;
     private IngresoResponse ingresoResponse;
+
+    final Usuario usuario = new Usuario();
+    final Presupuesto presupuesto = new Presupuesto();
 
     @BeforeEach
     void setUp() {
@@ -50,6 +52,9 @@ class IngresoControllerTest {
         objectMapper = new ObjectMapper();
         objectMapper.findAndRegisterModules();
         objectMapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
+
+        usuario.setId(1L);
+        presupuesto.setId(1L);
 
         // IngresoRequest con todos los campos
         ingresoRequest = IngresoRequest.builder()
@@ -66,8 +71,8 @@ class IngresoControllerTest {
                 .nombre("Salario")
                 .sueldo(BigDecimal.valueOf(1000.00))
                 .ingresoFormal(true)
-                .usuarioId(1L)
-                .presupuestoId(1L)
+                .usuario(usuario)
+                .presupuesto(presupuesto)
                 .build();
     }
 
@@ -75,14 +80,12 @@ class IngresoControllerTest {
     void testFindAllIngresosByUsuario() throws Exception {
         when(ingresoService.findAllByUsuario(1L)).thenReturn(List.of(ingresoResponse));
 
-        mockMvc.perform(get("/ingresos/usuario/1"))
+        mockMvc.perform(get("/api/ingresos/usuario/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].nombre").value("Salario"))
                 .andExpect(jsonPath("$[0].sueldo").value(1000.0))
-                .andExpect(jsonPath("$[0].ingresoFormal").value(true))
-                .andExpect(jsonPath("$[0].usuarioId").value(1))
-                .andExpect(jsonPath("$[0].presupuestoId").value(1));
+                .andExpect(jsonPath("$[0].ingresoFormal").value(true));
 
         verify(ingresoService, times(1)).findAllByUsuario(1L);
     }
@@ -91,14 +94,12 @@ class IngresoControllerTest {
     void testFindIngresoById() throws Exception {
         when(ingresoService.findById(1L)).thenReturn(ingresoResponse);
 
-        mockMvc.perform(get("/ingresos/1"))
+        mockMvc.perform(get("/api/ingresos/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Salario"))
                 .andExpect(jsonPath("$.sueldo").value(1000.0))
-                .andExpect(jsonPath("$.ingresoFormal").value(true))
-                .andExpect(jsonPath("$.usuarioId").value(1))
-                .andExpect(jsonPath("$.presupuestoId").value(1));
+                .andExpect(jsonPath("$.ingresoFormal").value(true));
 
         verify(ingresoService, times(1)).findById(1L);
     }
@@ -107,16 +108,14 @@ class IngresoControllerTest {
     void testSaveIngreso() throws Exception {
         when(ingresoService.save(any(IngresoRequest.class))).thenReturn(ingresoResponse);
 
-        mockMvc.perform(post("/ingresos")
+        mockMvc.perform(post("/api/ingresos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ingresoRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Salario"))
                 .andExpect(jsonPath("$.sueldo").value(1000.0))
-                .andExpect(jsonPath("$.ingresoFormal").value(true))
-                .andExpect(jsonPath("$.usuarioId").value(1))
-                .andExpect(jsonPath("$.presupuestoId").value(1));
+                .andExpect(jsonPath("$.ingresoFormal").value(true));
 
         verify(ingresoService, times(1)).save(any(IngresoRequest.class));
     }
@@ -125,16 +124,14 @@ class IngresoControllerTest {
     void testUpdateIngreso() throws Exception {
         when(ingresoService.update(eq(1L), any(IngresoRequest.class))).thenReturn(ingresoResponse);
 
-        mockMvc.perform(put("/ingresos/1")
+        mockMvc.perform(put("/api/ingresos/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(ingresoRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Salario"))
                 .andExpect(jsonPath("$.sueldo").value(1000.0))
-                .andExpect(jsonPath("$.ingresoFormal").value(true))
-                .andExpect(jsonPath("$.usuarioId").value(1))
-                .andExpect(jsonPath("$.presupuestoId").value(1));
+                .andExpect(jsonPath("$.ingresoFormal").value(true));
 
         verify(ingresoService, times(1)).update(eq(1L), any(IngresoRequest.class));
     }
@@ -143,7 +140,7 @@ class IngresoControllerTest {
     void testDeleteIngreso() throws Exception {
         doNothing().when(ingresoService).deleteById(1L);
 
-        mockMvc.perform(delete("/ingresos/1"))
+        mockMvc.perform(delete("/api/ingresos/1"))
                 .andExpect(status().isNoContent());
 
         verify(ingresoService, times(1)).deleteById(1L);
@@ -158,7 +155,7 @@ class IngresoControllerTest {
                 .usuarioId(null) // UsuarioId nulo - viola @NotNull
                 .build();
 
-        mockMvc.perform(post("/ingresos")
+        mockMvc.perform(post("/api/ingresos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest()); // Esperar error de validación
@@ -182,13 +179,13 @@ class IngresoControllerTest {
                 .nombre("Salario Informal")
                 .sueldo(BigDecimal.valueOf(500.00))
                 .ingresoFormal(false)
-                .usuarioId(1L)
-                .presupuestoId(null) // Este campo no estará en el JSON
+                .usuario(usuario)
+                .presupuesto(null) // Este campo no estará en el JSON
                 .build();
 
         when(ingresoService.save(any(IngresoRequest.class))).thenReturn(responseWithNullOptionalFields);
 
-        mockMvc.perform(post("/ingresos")
+        mockMvc.perform(post("/api/ingresos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestWithNullOptionalFields)))
                 .andExpect(status().isCreated())
@@ -196,10 +193,9 @@ class IngresoControllerTest {
                 .andExpect(jsonPath("$.nombre").value("Salario Informal"))
                 .andExpect(jsonPath("$.sueldo").value(500.0))
                 .andExpect(jsonPath("$.ingresoFormal").value(false))
-                .andExpect(jsonPath("$.usuarioId").value(1))
                 // NO verificamos presupuestoId porque cuando es null, no se incluye en el JSON
                 // debido a @JsonInclude(NON_NULL)
-                .andExpect(jsonPath("$.presupuestoId").doesNotExist()); // Verificar que NO existe
+                .andExpect(jsonPath("$.presupuesto").doesNotExist()); // Verificar que NO existe
 
         verify(ingresoService, times(1)).save(any(IngresoRequest.class));
     }
@@ -220,22 +216,20 @@ class IngresoControllerTest {
                 .nombre("Ingreso Extra")
                 .sueldo(BigDecimal.valueOf(300.00))
                 .ingresoFormal(null) // No estará en el JSON
-                .usuarioId(1L)
-                .presupuestoId(2L)
+                .usuario(usuario)
+                .presupuesto(presupuesto)
                 .build();
 
         when(ingresoService.save(any(IngresoRequest.class))).thenReturn(responseWithNullIngresoFormal);
 
-        mockMvc.perform(post("/ingresos")
+        mockMvc.perform(post("/api/ingresos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestWithNullIngresoFormal)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(3))
                 .andExpect(jsonPath("$.nombre").value("Ingreso Extra"))
                 .andExpect(jsonPath("$.sueldo").value(300.0))
-                .andExpect(jsonPath("$.ingresoFormal").doesNotExist()) // No debe existir en JSON
-                .andExpect(jsonPath("$.usuarioId").value(1))
-                .andExpect(jsonPath("$.presupuestoId").value(2));
+                .andExpect(jsonPath("$.ingresoFormal").doesNotExist()); // No debe existir en JSON
 
         verify(ingresoService, times(1)).save(any(IngresoRequest.class));
     }

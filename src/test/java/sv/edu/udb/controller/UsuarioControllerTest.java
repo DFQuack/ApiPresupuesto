@@ -13,7 +13,7 @@ import sv.edu.udb.controller.request.UsuarioRequest;
 import sv.edu.udb.controller.response.UsuarioResponse;
 import sv.edu.udb.service.UsuarioService;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -52,9 +52,9 @@ class UsuarioControllerTest {
 
     @Test
     void testFindAllUsuarios() throws Exception {
-        when(usuarioService.findAll()).thenReturn(Arrays.asList(usuarioResponse));
+        when(usuarioService.findAll()).thenReturn(Collections.singletonList(usuarioResponse));
 
-        mockMvc.perform(get("/usuarios")
+        mockMvc.perform(get("/api/usuarios")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].username").value("usuario1"));
@@ -66,7 +66,7 @@ class UsuarioControllerTest {
     void testFindUsuarioById() throws Exception {
         when(usuarioService.findById(1L)).thenReturn(usuarioResponse);
 
-        mockMvc.perform(get("/usuarios/1")
+        mockMvc.perform(get("/api/usuarios/1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("usuario1"));
@@ -78,7 +78,7 @@ class UsuarioControllerTest {
     void testSaveUsuario() throws Exception {
         when(usuarioService.save(any(UsuarioRequest.class))).thenReturn(usuarioResponse);
 
-        mockMvc.perform(post("/usuarios")
+        mockMvc.perform(post("/api/usuarios")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuarioRequest)))
                 .andExpect(status().isCreated())
@@ -91,7 +91,7 @@ class UsuarioControllerTest {
     void testUpdateUsuario() throws Exception {
         when(usuarioService.update(eq(1L), any(UsuarioRequest.class))).thenReturn(usuarioResponse);
 
-        mockMvc.perform(put("/usuarios/1")
+        mockMvc.perform(put("/api/usuarios/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuarioRequest)))
                 .andExpect(status().isOk())
@@ -104,7 +104,7 @@ class UsuarioControllerTest {
     void testDeleteUsuario() throws Exception {
         doNothing().when(usuarioService).deleteById(1L);
 
-        mockMvc.perform(delete("/usuarios/1"))
+        mockMvc.perform(delete("/api/usuarios/1"))
                 .andExpect(status().isNoContent());
 
         verify(usuarioService, times(1)).deleteById(1L);

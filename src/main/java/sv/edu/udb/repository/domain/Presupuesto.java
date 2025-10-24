@@ -3,10 +3,7 @@ package sv.edu.udb.repository.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -18,6 +15,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Presupuesto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +35,8 @@ public class Presupuesto {
 
     @OneToOne
     @JoinColumn(name = "idUsuario")
-    @JsonBackReference
     private Usuario usuario;
 
     @OneToMany(mappedBy = "presupuesto", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
     private List<Ingreso> ingresos;
 }

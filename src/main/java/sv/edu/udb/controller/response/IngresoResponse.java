@@ -1,9 +1,12 @@
 package sv.edu.udb.controller.response;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
+import sv.edu.udb.repository.domain.Presupuesto;
+import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 
@@ -23,6 +26,8 @@ public class IngresoResponse {
     private BigDecimal sueldo;
     private Boolean ingresoFormal;
 
-    private Long usuarioId;
-    private Long presupuestoId;
+    @JsonBackReference(value = "usuario-ingresos")
+    private Usuario usuario;
+    @JsonBackReference(value = "presupuesto-ingresos")
+    private Presupuesto presupuesto;
 }

@@ -19,7 +19,7 @@ import java.time.Month;
 public class Gasto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idGasto;
+    private Long id;
 
     @Column(nullable = false)
     private Month mes;
@@ -38,9 +38,5 @@ public class Gasto {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario")
-    @JsonBackReference
     private Usuario usuario;
-
-    public void setId(long l) {
-    }
 }

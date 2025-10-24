@@ -15,18 +15,17 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "gastos")
+@RequestMapping(path = "api/gastos")
 public class GastoController {
     private final GastoService gastoService;
-    private final GastoMapper gastoMapper;
 
     @GetMapping(path = "usuario/{id}")
-    public List<GastoResponse> findAllGastosByUsuario(@PathVariable(name = "id") final Long id) {
+    public List<GastoResponse> findAllGastosByUsuario(@PathVariable final Long id) {
         return gastoService.findAllByUsuario(id);
     }
 
     @GetMapping(path = "{id}")
-    public GastoResponse findGastoById(@PathVariable(name = "id") final Long id) {
+    public GastoResponse findGastoById(@PathVariable final Long id) {
         return gastoService.findById(id);
     }
 
@@ -37,14 +36,13 @@ public class GastoController {
     }
 
     @PutMapping(path = "{id}")
-    public GastoResponse updateGasto(@PathVariable(name = "id") final Long id,
-                                     @Valid @RequestBody final GastoRequest gastoRequest) {
+    public GastoResponse updateGasto(@PathVariable final Long id, @Valid @RequestBody final GastoRequest gastoRequest) {
         return gastoService.update(id, gastoRequest);
     }
 
     @DeleteMapping(path = "{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteGasto(@PathVariable(name = "id") final Long id) {
+    public void deleteGasto(@PathVariable final Long id) {
         gastoService.deleteById(id);
     }
 }

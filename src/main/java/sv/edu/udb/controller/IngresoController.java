@@ -15,18 +15,17 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "ingresos")
+@RequestMapping(path = "api/ingresos")
 public class IngresoController {
     private final IngresoService ingresoService;
-    private final IngresoMapper ingresoMapper;
 
     @GetMapping(path = "usuario/{id}")
-    public List<IngresoResponse> findAllIngresosByUsuarioId(@PathVariable(name = "id") final Long id) {
+    public List<IngresoResponse> findAllIngresosByUsuarioId(@PathVariable final Long id) {
         return ingresoService.findAllByUsuario(id);
     }
 
     @GetMapping(path = "{id}")
-    public IngresoResponse findIngresoById(@PathVariable(name = "id") final Long id) {
+    public IngresoResponse findIngresoById(@PathVariable final Long id) {
         return ingresoService.findById(id);
     }
 
@@ -37,14 +36,13 @@ public class IngresoController {
     }
 
     @PutMapping(path = "{id}")
-    public IngresoResponse updateIngreso(@PathVariable final Long id,
-                                         @Valid @RequestBody final IngresoRequest ingresoRequest) {
+    public IngresoResponse updateIngreso(@PathVariable final Long id, @Valid @RequestBody final IngresoRequest ingresoRequest) {
         return ingresoService.update(id, ingresoRequest);
     }
 
     @DeleteMapping(path = "{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteIngreso(@PathVariable(name = "id") final Long id) {
+    public void deleteIngreso(@PathVariable final Long id) {
         ingresoService.deleteById(id);
     }
 }

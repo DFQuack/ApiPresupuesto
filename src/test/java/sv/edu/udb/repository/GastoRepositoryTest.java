@@ -44,7 +44,7 @@ public class GastoRepositoryTest {
         Gasto savedGasto = gastoRepository.save(gasto);
 
         // Then
-        assertNotNull(savedGasto.getIdGasto());
+        assertNotNull(savedGasto.getId());
         assertEquals(Month.JANUARY, savedGasto.getMes());
         assertEquals(new BigDecimal("200.00"), savedGasto.getGastosBasicos());
         assertEquals(savedUsuario.getId(), savedGasto.getUsuario().getId());

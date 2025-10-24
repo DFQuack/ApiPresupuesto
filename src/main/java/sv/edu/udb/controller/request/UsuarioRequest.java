@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.List;
-
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Getter
@@ -23,7 +21,5 @@ public class UsuarioRequest {
     @NotBlank
     private String password;
 
-    private List<Long> ingresoIds;
     private Long presupuestoId;
-    private List<Long> gastoIds;
 }

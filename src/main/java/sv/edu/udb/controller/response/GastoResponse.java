@@ -1,9 +1,11 @@
 package sv.edu.udb.controller.response;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
+import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 import java.time.Month;
@@ -25,6 +27,6 @@ public class GastoResponse {
     private BigDecimal deudas;
     private BigDecimal otrosGastos;
     private BigDecimal ahorro;
-
-    private Long usuarioId;
+    @JsonBackReference(value = "usuario-gastos")
+    private Usuario usuario;
 }

@@ -2,8 +2,11 @@ package sv.edu.udb.controller.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
+import sv.edu.udb.repository.domain.Ingreso;
+import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,7 +27,7 @@ public class PresupuestoResponse {
     private BigDecimal deudas;
     private BigDecimal otrosGastos;
     private BigDecimal ahorro;
-
-    private Long usuarioId;
-    private List<Long> ingresoIds;
+    private Usuario usuario;
+    @JsonManagedReference(value = "presupuesto-ingresos")
+    private List<Ingreso> ingresos;
 }

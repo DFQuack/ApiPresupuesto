@@ -81,7 +81,7 @@ public class GastoServiceImplTest {
                 .deudas(new BigDecimal("50.00"))
                 .otrosGastos(new BigDecimal("20.00"))
                 .ahorro(new BigDecimal("30.00"))
-                .usuarioId(1L)
+                .usuario(usuario)
                 .build();
     }
 
@@ -96,7 +96,7 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals(1L, result.get(0).getUsuarioId());
+        assertNotNull(result.get(0).getUsuario());
         verify(gastoRepo).findByUsuario_Id(1L);
         verify(gastoMapper).toGastoResponseList(Collections.singletonList(gasto));
     }
@@ -113,7 +113,7 @@ public class GastoServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
         assertEquals(new BigDecimal("100.00"), result.getGastosBasicos());
-        assertEquals(1L, result.getUsuarioId());
+        assertNotNull(result.getUsuario());
         verify(gastoRepo).findById(1L);
         verify(gastoMapper).toGastoResponse(gasto);
     }
@@ -131,7 +131,6 @@ public class GastoServiceImplTest {
     @DisplayName("Debería guardar un nuevo gasto")
     void save_shouldSaveNewGasto() {
         // Mock del usuario
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(gastoMapper.toGasto(gastoRequest)).thenReturn(gasto);
         when(gastoRepo.save(gasto)).thenReturn(gasto);
         when(gastoMapper.toGastoResponse(gasto)).thenReturn(gastoResponse);
@@ -141,7 +140,6 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
-        assertEquals(1L, result.getUsuarioId());
         verify(gastoMapper).toGasto(gastoRequest);
         verify(gastoRepo).save(gasto);
         verify(gastoMapper).toGastoResponse(gasto);
@@ -151,7 +149,6 @@ public class GastoServiceImplTest {
     @DisplayName("Debería actualizar un gasto existente")
     void update_shouldUpdateExistingGasto() {
         when(gastoRepo.findById(1L)).thenReturn(Optional.of(gasto));
-        when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
         when(gastoRepo.save(any(Gasto.class))).thenReturn(gasto);
         when(gastoMapper.toGastoResponse(gasto)).thenReturn(gastoResponse);
 
@@ -160,7 +157,7 @@ public class GastoServiceImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals(Month.JANUARY, result.getMes());
-        assertEquals(1L, result.getUsuarioId());
+        assertNotNull(result.getUsuario());
         verify(gastoRepo).findById(1L);
         verify(gastoRepo).save(gasto);
         verify(gastoMapper).toGastoResponse(gasto);

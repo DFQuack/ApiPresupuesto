@@ -11,11 +11,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import sv.edu.udb.controller.request.GastoRequest;
 import sv.edu.udb.controller.response.GastoResponse;
+import sv.edu.udb.repository.domain.Usuario;
 import sv.edu.udb.service.GastoService;
 
 import java.math.BigDecimal;
 import java.time.Month;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -39,8 +41,12 @@ class GastoControllerTest {
     private GastoRequest gastoRequest;
     private GastoResponse gastoResponse;
 
+    final Usuario usuario = new Usuario();
+
     @BeforeEach
     void setUp() {
+        usuario.setId(1L);
+
         gastoRequest = GastoRequest.builder()
                 .mes(Month.JANUARY)
                 .gastosBasicos(BigDecimal.valueOf(100.00))
@@ -57,15 +63,15 @@ class GastoControllerTest {
                 .deudas(BigDecimal.valueOf(50.00))
                 .otrosGastos(BigDecimal.valueOf(30.00))
                 .ahorro(BigDecimal.valueOf(20.00))
-                .usuarioId(1L)
+                .usuario(usuario)
                 .build();
     }
 
     @Test
     void testFindAllGastosByUsuario() throws Exception {
-        when(gastoService.findAllByUsuario(1L)).thenReturn(Arrays.asList(gastoResponse));
+        when(gastoService.findAllByUsuario(1L)).thenReturn(Collections.singletonList(gastoResponse));
 
-        mockMvc.perform(get("/gastos/usuario/1")
+        mockMvc.perform(get("/api/gastos/usuario/1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
@@ -78,7 +84,7 @@ class GastoControllerTest {
     void testFindGastoById() throws Exception {
         when(gastoService.findById(1L)).thenReturn(gastoResponse);
 
-        mockMvc.perform(get("/gastos/1")
+        mockMvc.perform(get("/api/gastos/1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
@@ -91,7 +97,7 @@ class GastoControllerTest {
     void testSaveGasto() throws Exception {
         when(gastoService.save(any(GastoRequest.class))).thenReturn(gastoResponse);
 
-        mockMvc.perform(post("/gastos")
+        mockMvc.perform(post("/api/gastos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(gastoRequest)))
                 .andExpect(status().isCreated())
@@ -105,7 +111,7 @@ class GastoControllerTest {
     void testUpdateGasto() throws Exception {
         when(gastoService.update(eq(1L), any(GastoRequest.class))).thenReturn(gastoResponse);
 
-        mockMvc.perform(put("/gastos/1")
+        mockMvc.perform(put("/api/gastos/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(gastoRequest)))
                 .andExpect(status().isOk())
@@ -119,7 +125,7 @@ class GastoControllerTest {
     void testDeleteGasto() throws Exception {
         doNothing().when(gastoService).deleteById(1L);
 
-        mockMvc.perform(delete("/gastos/1"))
+        mockMvc.perform(delete("/api/gastos/1"))
                 .andExpect(status().isNoContent());
 
         verify(gastoService, times(1)).deleteById(1L);

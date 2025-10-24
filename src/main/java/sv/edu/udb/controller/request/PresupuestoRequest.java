@@ -9,7 +9,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -39,6 +38,4 @@ public class PresupuestoRequest {
 
     @NotNull
     private Long usuarioId;
-
-    private List<Long> ingresoIds;
 }

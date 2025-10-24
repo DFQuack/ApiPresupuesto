@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "usuarios")
+@RequestMapping(path = "api/usuarios")
 public class UsuarioController {
     private final UsuarioService usuarioService;
 
@@ -24,7 +24,7 @@ public class UsuarioController {
     }
 
     @GetMapping(path = "{id}")
-    public UsuarioResponse findById(@PathVariable(name = "id") Long id) {
+    public UsuarioResponse findById(@PathVariable final Long id) {
         return usuarioService.findById(id);
     }
 
@@ -34,13 +34,13 @@ public class UsuarioController {
         return usuarioService.save(usuarioRequest);
     }
     @PutMapping(path = "{id}")
-    public UsuarioResponse update(@PathVariable(name = "id") final Long id, @Valid @RequestBody final UsuarioRequest usuarioRequest) {
+    public UsuarioResponse update(@PathVariable final Long id, @Valid @RequestBody final UsuarioRequest usuarioRequest) {
         return usuarioService.update(id, usuarioRequest);
     }
 
     @DeleteMapping(path = "{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteById(@PathVariable(name = "id") final Long id) {
+    public void deleteById(@PathVariable final Long id) {
         usuarioService.deleteById(id);
     }
 }

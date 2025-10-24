@@ -13,18 +13,17 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "presupuestos")
+@RequestMapping(path = "api/presupuestos")
 public class PresupuestoController {
     private final PresupuestoService presService;
-    private final PresupuestoMapper presMapper;
 
     @GetMapping(path = "usuario/{id}")
-    public PresupuestoResponse findPresByUsuario(@PathVariable(name = "id") final Long id) {
+    public PresupuestoResponse findPresByUsuario(@PathVariable final Long id) {
         return presService.findByUsuario(id);
     }
 
     @GetMapping(path = "{id}")
-    public PresupuestoResponse findPresById(@PathVariable(name = "id") final Long id) {
+    public PresupuestoResponse findPresById(@PathVariable final Long id) {
         return presService.findById(id);
     }
 
@@ -35,14 +34,13 @@ public class PresupuestoController {
     }
 
     @PutMapping(path = "{id}")
-    public PresupuestoResponse updatePresupuesto(@PathVariable final Long id,
-                                                 @Valid @RequestBody final PresupuestoRequest presRequest) {
+    public PresupuestoResponse updatePresupuesto(@PathVariable final Long id, @Valid @RequestBody final PresupuestoRequest presRequest) {
         return presService.update(id, presRequest);
     }
 
     @DeleteMapping(path = "{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deletePresupuesto(@PathVariable(name = "id") final Long id) {
+    public void deletePresupuesto(@PathVariable final Long id) {
         presService.deleteById(id);
     }
 }
