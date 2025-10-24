@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,8 +23,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(GastoController.class)  // Solo carga el controlador
 class GastoControllerTest {
 
     @Autowired
@@ -45,16 +43,15 @@ class GastoControllerTest {
     void setUp() {
         usuario = new Usuario();
         usuario.setId(1L);
-        usuario.setUsername("usuario1"); // Opcional: agregar más datos si es necesario
+        usuario.setUsername("usuario1");
 
-        // CAMBIO: Usar usuario en lugar de usuarioId
         gastoRequest = GastoRequest.builder()
                 .mes(Month.JANUARY)
                 .gastosBasicos(BigDecimal.valueOf(100.00))
                 .deudas(BigDecimal.valueOf(50.00))
                 .otrosGastos(BigDecimal.valueOf(30.00))
                 .ahorro(BigDecimal.valueOf(20.00))
-                .usuario(usuario)  // ← CAMBIO AQUÍ
+                .usuario(usuario)
                 .build();
 
         gastoResponse = GastoResponse.builder()

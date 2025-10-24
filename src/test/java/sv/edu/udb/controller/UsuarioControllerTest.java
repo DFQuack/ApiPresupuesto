@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,8 +20,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(UsuarioController.class)
 class UsuarioControllerTest {
 
     @Autowired
@@ -45,6 +43,7 @@ class UsuarioControllerTest {
                 .build();
 
         usuarioResponse = UsuarioResponse.builder()
+                .id(1L)  // Agregar ID
                 .username("usuario1")
                 .password("123456")
                 .build();
@@ -57,6 +56,7 @@ class UsuarioControllerTest {
         mockMvc.perform(get("/api/usuarios")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].username").value("usuario1"));
 
         verify(usuarioService, times(1)).findAll();
@@ -69,6 +69,7 @@ class UsuarioControllerTest {
         mockMvc.perform(get("/api/usuarios/1")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.username").value("usuario1"));
 
         verify(usuarioService, times(1)).findById(1L);
@@ -82,6 +83,7 @@ class UsuarioControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuarioRequest)))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.username").value("usuario1"));
 
         verify(usuarioService, times(1)).save(any(UsuarioRequest.class));
@@ -95,6 +97,7 @@ class UsuarioControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuarioRequest)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.username").value("usuario1"));
 
         verify(usuarioService, times(1)).update(eq(1L), any(UsuarioRequest.class));
