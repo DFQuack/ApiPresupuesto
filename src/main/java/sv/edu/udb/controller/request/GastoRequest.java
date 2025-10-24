@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
+import sv.edu.udb.repository.domain.Usuario;
 
 import java.math.BigDecimal;
 import java.time.Month;
@@ -41,5 +42,5 @@ public class GastoRequest {
     private BigDecimal ahorro;
 
     @NotNull
-    private Long usuarioId;
+    private Usuario usuario;
 }

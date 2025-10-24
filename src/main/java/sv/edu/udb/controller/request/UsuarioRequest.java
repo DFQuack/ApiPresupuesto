@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import sv.edu.udb.repository.domain.Presupuesto;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -21,5 +22,5 @@ public class UsuarioRequest {
     @NotBlank
     private String password;
 
-    private Long presupuestoId;
+    private Presupuesto presupuesto;
 }

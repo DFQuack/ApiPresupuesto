@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import sv.edu.udb.repository.domain.Presupuesto;
 
 import java.math.BigDecimal;
 
@@ -29,5 +30,5 @@ public class IngresoRequest {
     @NotNull
     private Long usuarioId;
 
-    private Long presupuestoId;
+    private Presupuesto presupuesto;
 }
